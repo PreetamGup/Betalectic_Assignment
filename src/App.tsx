@@ -4,7 +4,7 @@ import './App.css';
 function App() {
   return (
     <div className="App ">
-      <h1 className='text-center bg-slate-950 text-white'>React</h1>
+      <h1 className='text-center bg-slate-950 text-white'>Assignmet</h1>
     </div>
   );
 }
