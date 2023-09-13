@@ -1,5 +1,5 @@
 import React,{useEffect, useState} from 'react'
-
+import {favoriteList} from '../App'
 
 
 interface ReactPackage {
@@ -9,20 +9,52 @@ interface ReactPackage {
     }
   }
 
-const Home:React.FC = () => {
-  const [input, setInput]= useState<String>();
+  interface HomeProps {
+    favList: favoriteList[]; // Define the prop favlist
+    setFavList: React.Dispatch<React.SetStateAction<favoriteList[]>>; // Define the prop setFavList
+  }
+
+const Home:React.FC<HomeProps>= ({ favList, setFavList }) => {
+  const [input, setInput]= useState<String>("");
   const [fav, setFav]= useState<String>();
-  const [whyfav, setWhyFav]= useState<String>();
+  const [whyFav, setwhyFav]= useState<String>();
   const [searchResult, setSearchResult] = useState<ReactPackage[]>([])
+  const [errors, setErrors] = useState({
+    fav:'',
+    whyFav:''
+  });
 
 
+  const validateForm = () => {
+    let errorMessage={
+        fav:fav?'':"Fav is required",
+        whyFav: whyFav?'':"Add reason"
+    }
+    
+    console.log(errorMessage)
+
+    setErrors(errorMessage)
+
+    return errorMessage.fav ==='' && errorMessage.whyFav ==='';
+  };
 
   const handleSubmit=(e:React.FormEvent<HTMLFormElement>)=>{
    e.preventDefault();
-   
+
+   if(validateForm()){
+        let newFav:favoriteList={
+            fav:fav || "",
+            whyFav:whyFav || ""
+        }
+        
+        setFavList((prevFavList) => [...prevFavList, newFav]);
+
+        setFav("");
+        setwhyFav("");
+   }
 
   }
- 
+  
   useEffect(()=>{
      // Set a timer to call the API after 500 milliseconds
      const timer = setTimeout(async() => {
@@ -44,26 +76,32 @@ const Home:React.FC = () => {
     <div className='flex flex-col'>
        <div className='searchInput'>
             <label htmlFor="search" className="text-xl font-bold">Search For NPM Packages</label>
-            <input type="text" id='search' onChange={(e)=> setInput(e.target.value)} className='border-solid border w-full rounded-sm text-sm text-gray-500 p-2'/> 
+            <input type="text" id='search'  onChange={(e)=> setInput(e.target.value)} className='border-solid border w-full rounded-sm text-sm text-gray-500 p-2'/> 
        </div>
 
         <div className='result mt-5'>
             <h2 className='text-xl font-bold'>Results</h2>
+            {
+                errors.fav && <span className=' text-red-600'>{errors.fav}</span>
+            }
             <form className="flex flex-col w-auto " onSubmit={handleSubmit}>
                 
                     <div className='flex flex-col w-auto h-40 overflow-auto scrollbar-hide'>
                        { searchResult?.map((result)=>(
-                        <div className='flex gap-1'>
-                            <input type='radio' id={`${result.package.name}`} value={`${result.package.name}`} onChange={(e)=>{setFav(e.target.value); console.log(e.target.value)}}/>
-                            <label htmlFor="">{`${result.package.name}`}</label>
+                        <div className='flex gap-1 ' key={result.package.name}>
+                            <input type='radio' name="npm package" id={result.package.name} value={result.package.name} onChange={(e)=>{setFav(e.target.value)}} />
+                            <label htmlFor="">{result.package.name}</label>
                         </div>
                         ))}
                     </div>
 
-                <label htmlFor="whyfav">Why is this your fav?</label>
-                <textarea name="whyfac" id="whyfav" cols={30} rows={5} className=' border-solid border-2 p-2' onChange={(e)=>setWhyFav(e.target.value)}></textarea>
+                <label htmlFor="whyFav" className='mt-5'>Why is this your fav?</label>
+                    {
+                    errors.whyFav && <span className=' text-red-600'>{errors.whyFav}</span>
+                    }
+                <textarea name="whyfac" id="whyFav" cols={30} rows={5} className=' border-solid border-2 p-2' onChange={(e)=>setwhyFav(e.target.value)} ></textarea>
 
-                <button className=' bg-sky-600 p-2 w-[100px] mt-4 '>Submit</button>
+                <button className=' bg-sky-600 p-1 w-[100px] mt-4 rounded'>Submit</button>
              
            </form>
         </div>
