@@ -1,10 +1,21 @@
 import React from 'react';
 import './App.css';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Home from './components/Home';
+import Favorite from './components/Favorite';
 
-function App() {
+
+const App:React.FC=()=> {
+
   return (
-    <div className="App ">
-      <h1 className='text-center bg-slate-950 text-white'>Assignmet</h1>
+    <div className="App m-[50px]">
+      <BrowserRouter>
+          <Routes>
+            <Route path='/' element={<Home/>} />
+            <Route path='favorite' element={<Favorite/>} />
+          </Routes>
+      </BrowserRouter>
+      
     </div>
   );
 }
