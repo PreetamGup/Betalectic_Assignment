@@ -1,5 +1,6 @@
 import React,{useEffect, useState} from 'react'
 import {favoriteList} from '../App'
+import { useNavigate } from 'react-router-dom';
 
 
 interface ReactPackage {
@@ -23,6 +24,8 @@ const Home:React.FC<HomeProps>= ({ favList, setFavList }) => {
     fav:'',
     whyFav:''
   });
+
+  const navigate= useNavigate();
 
 
   const validateForm = () => {
@@ -51,6 +54,7 @@ const Home:React.FC<HomeProps>= ({ favList, setFavList }) => {
 
         setFav("");
         setwhyFav("");
+        navigate("/favorite")
    }
 
   }
@@ -74,6 +78,11 @@ const Home:React.FC<HomeProps>= ({ favList, setFavList }) => {
  
   return (
     <div className='flex flex-col'>
+      <div className='navigation mb-5'>
+        <span className=' bg-emerald-500 p-1 mr-2 hover:cursor-pointer hover:bg-cyan-500' onClick={()=>navigate("/")}>Home</span>
+        <span className=' bg-emerald-500 p-1 mr-2 hover:cursor-pointer hover:bg-cyan-500' onClick={()=>navigate("/favorite")}>Favorite</span>
+      </div>
+     
        <div className='searchInput'>
             <label htmlFor="search" className="text-xl font-bold">Search For NPM Packages</label>
             <input type="text" id='search'  onChange={(e)=> setInput(e.target.value)} className='border-solid border w-full rounded-sm text-sm text-gray-500 p-2'/> 

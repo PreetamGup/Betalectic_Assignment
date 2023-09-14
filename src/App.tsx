@@ -10,7 +10,16 @@ export interface favoriteList{
 }
 
 const App=()=> {
-  const [favList, setFavList]= useState<favoriteList[]>([])
+  const [favList, setFavList]= useState<favoriteList[]>([{
+    fav:"react",
+    whyFav:"it is best"
+  },
+  {
+    fav:"router",
+    whyFav:"Routing"
+  }
+
+])
   console.log(favList)
   return (
     <div className="App m-[50px]">

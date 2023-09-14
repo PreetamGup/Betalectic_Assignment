@@ -47,3 +47,8 @@
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
+
+table, th, td {
+  border: 1px solid rgba(128, 128, 128, 0.753);
+  border-collapse: collapse;
+}
