@@ -10,16 +10,7 @@ export interface favoriteList{
 }
 
 const App=()=> {
-  const [favList, setFavList]= useState<favoriteList[]>([{
-    fav:"react",
-    whyFav:"it is best"
-  },
-  {
-    fav:"router",
-    whyFav:"Routing"
-  }
-
-])
+  const [favList, setFavList]= useState<favoriteList[]>([])
   console.log(favList)
   return (
     <div className="App m-[50px]">
@@ -27,6 +18,7 @@ const App=()=> {
           <Routes>
             <Route path='/' element={<Home favList={favList} setFavList={setFavList}/>} />
             <Route path='favorite' element={<Favorite favList={favList} setFavList={setFavList}/>} />
+          
           </Routes>
       </BrowserRouter>
       

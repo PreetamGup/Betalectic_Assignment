@@ -1,11 +1,11 @@
-import React from 'react'
+import React,{useState} from 'react'
 import {favoriteList} from '../App'
 import { useNavigate } from 'react-router-dom';
 import {AiOutlineEye, AiOutlineEdit, AiOutlineDelete} from 'react-icons/ai'
 import { HeadlessModal } from "@locoworks/reusejs-react-modal";
-
 import DModal from './DeleteModal';
-
+import ViewModal from './ViewModal';
+import EditModal from './EditModal';
 
 
 interface FavoriteProps {
@@ -15,6 +15,8 @@ interface FavoriteProps {
 
 
 const Favorite:React.FC<FavoriteProps> = ({favList, setFavList}) => {
+  const [Efavorite, setEfavorite] = useState<favoriteList>()
+  const [showEditModal2, setShowEditModal2] = useState<Boolean>(false);
   const navigate= useNavigate();
 
   
@@ -23,18 +25,39 @@ const Favorite:React.FC<FavoriteProps> = ({favList, setFavList}) => {
       setFavList([...list])
   }
 
+  const handleEdit=(fav:favoriteList)=>{
+    setEfavorite(fav); 
+    setShowEditModal2(true)
+  }
+
+  const showViewModal = async (fav:favoriteList) => {
+    
+		const result = await HeadlessModal({
+			component: ViewModal,
+			backdropClasses: " bg-transparent w-full h-full absolute top-0",
+      fav,
+       
+		});
+
+    if (result) {
+			setTimeout(() => {
+				alert("Deleted");
+			}, 200);
+		}
+	}; 
+
   const showDModal = async (name:String) => {
-    console.log(name,"favorite")
+    
 		const result = await HeadlessModal({
 			component: DModal,
-			backdropClasses: " bg-transparent absolute w-full h-full absolute top-0",
+			backdropClasses: " bg-transparent w-full h-full absolute top-0",
       handleDelete,
       name, 
 		});
 		if (result) {
 			setTimeout(() => {
-				alert("Confirmed");
-			}, 500);
+				alert("Deleted");
+			}, 200);
 		}
 	};
 
@@ -64,20 +87,26 @@ const Favorite:React.FC<FavoriteProps> = ({favList, setFavList}) => {
                 <div>
                   <table className='w-full' >
                     <thead>
+                      <tr>
                       <th className=' w-[50%] text-left pl-2'>Package Name</th>
                       <th className=' w-[50%] text-left pl-2'>Actions</th>
+                      </tr>
                     </thead>
                     <tbody>
                      {
                       favList?.map((fav)=>(
-                        <tr>
+                        <React.Fragment key={`${fav.fav}`}>
+                          <tr >
                           <td className=' pl-2'>{fav.fav}</td>
                           <td className=' flex gap-10 text-[23px] pl-4'>
-                            <AiOutlineEye className='hover:cursor-pointer'/>
-                            <AiOutlineEdit className='hover:cursor-pointer'/>
+                            <AiOutlineEye className='hover:cursor-pointer'  onClick={(e)=>showViewModal(fav)}/>
+                            <AiOutlineEdit className='hover:cursor-pointer'  
+                            onClick={()=>handleEdit(fav)}/>
                             <AiOutlineDelete className='hover:cursor-pointer' onClick={(e)=>showDModal(fav.fav)}/>
                           </td>
                         </tr>
+                       
+                        </React.Fragment>
                       ))
                      }
                     </tbody>
@@ -85,6 +114,11 @@ const Favorite:React.FC<FavoriteProps> = ({favList, setFavList}) => {
                 </div>
             }
         </div>
+        
+        {
+          showEditModal2 &&<div className='absolute top-[14vmax] left-[35vmax]' ><EditModal  fav={Efavorite} favlist={favList} setShowEditModal2={setShowEditModal2}/></div>
+        }
+        
     </div>
   )
 }

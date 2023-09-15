@@ -27,6 +27,23 @@ const Home:React.FC<HomeProps>= ({ favList, setFavList }) => {
 
   const navigate= useNavigate();
 
+  useEffect(()=>{
+    // Set a timer to call the API after 500 milliseconds
+    const timer = setTimeout(async() => {
+       // Only call the API when the search term is not empty
+       if (input !== "") {
+         const response = await fetch(`https://api.npms.io/v2/search?q=${input}`);
+         const data = await response.json();
+         
+         setSearchResult(data.results)
+         console.log(data.results)
+       }
+     }, 500);
+ 
+     return () => clearTimeout(timer);
+   }, [input]);
+
+
 
   const validateForm = () => {
     let errorMessage={
@@ -59,22 +76,7 @@ const Home:React.FC<HomeProps>= ({ favList, setFavList }) => {
 
   }
   
-  useEffect(()=>{
-     // Set a timer to call the API after 500 milliseconds
-     const timer = setTimeout(async() => {
-        // Only call the API when the search term is not empty
-        if (input !== "") {
-          const response = await fetch(`https://api.npms.io/v2/search?q=${input}`);
-          const data = await response.json();
-          
-          setSearchResult(data.results)
-          console.log(data.results)
-        }
-      }, 500);
   
-      return () => clearTimeout(timer);
-    }, [input]);
-
  
   return (
     <div className='flex flex-col'>

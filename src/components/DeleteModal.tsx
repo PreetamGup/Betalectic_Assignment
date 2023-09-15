@@ -36,7 +36,7 @@ const DModal = (props: any, ref: any) => {
                     className="rounded bg-emerald-500  text-white px-3 py-1 w-fit hover:bg-sky-500 font-bold"
                     onClick={() => {
                        props.handleDelete(props.name) 
-                       props.onAction(false)
+                       props.onAction(true)
                     }}
                 >
                     Confirm
